@@ -20,9 +20,9 @@
 
         }
 
-1.获取服务器端接口中得到的目标时间（最好是long数据类型方便加减操作）准备好数据；
+2.获取服务器端接口中得到的目标时间（最好是long数据类型方便加减操作）准备好数据；
 
-2.创建Thread,主要是计算当前时间和目标时间的差值，也就是countTime字段的值；
+3.创建Thread,主要是计算当前时间和目标时间的差值，也就是countTime字段的值；
 
 获取当前时间方法：long currentTime = System.currentTimeMillis();
 
@@ -55,6 +55,52 @@ long hours = (counttime) / (1000 * 60 * 60);
                           }
                           timer = hoursStr + ":" + minutesStr + ":" + secondStr;
 ```
+
+4.准备好数据，我们就要创建适配器，适配器和普通的适配器一样，只不过要创建一个ViewHolder的集合mHolderList，在onBindViewHolder方法中将每一个ViewHolder
+add进mHolderList中 <br>
+//先判断集合中是否包含当前的ViewHolder
+if (!mHolderList.contains(myViewHolder)) {
+     mHolderList.add(myViewHolder);//添加
+}
+
+然后提供一个方法更新item中时间差<br>
+    /**
+     * 只刷新item中的计时器数据
+     */
+    public void notifyTime() {
+        for (int i = 0; i < mHolderList.size(); i++) {
+            mHolderList.get(i).mTextView.setText(mData.get(mHolderList.get(i).position).timer);
+        }
+    }
+
+5.创建Handler，每次收到新的消息就调用Adapter中的notifyTime方法；
+        private Handler mHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case 1:
+                            //优化刷新adapter的方法
+                            mAdapter.notifyTime();
+                            break;
+                    }
+                    super.handleMessage(msg);
+                }
+            };
+
+6.在之前创建好的Thread中获取完时间差值之后创建message并发送给Handler
+
+        Message message = new Message();
+        message.what = 1;
+        //发送信息给handler
+        mHandler.sendMessage(message);
+
+注：Thread中要有一个停止发送消息的标记值endThread，随着当前页面的生命周期停止Thread
+
+        @Override
+            public void onDestroy() {
+                super.onDestroy();
+                myThread.endThread = true;
+            }
 
 
 
