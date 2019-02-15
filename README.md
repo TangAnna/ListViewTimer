@@ -102,6 +102,7 @@ if (!mHolderList.contains(myViewHolder)) {
                 myThread.endThread = true;
             }
 
+具体的详细实现看Demo中，每一步都有注释可以看懂;
 
 
 
