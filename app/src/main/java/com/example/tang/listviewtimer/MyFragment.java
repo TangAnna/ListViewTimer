@@ -92,16 +92,11 @@ public class MyFragment extends Fragment {
                     for (int i = 0; i < mModelList.size(); i++) {
                         //计算出每个任务的发送时间与当前时间的时间差值
                         mData.get(i).countTime = currentTime - mData.get(i).sendTime;
-                        Log.d("TAG", "initData: 当前时间==" + currentTime);
-                        Log.d("TAG", "initData: 时间差==" + mData.get(i).countTime);
                         //时间转换
                         long counttime = mModelList.get(i).countTime;
                         long hours = (counttime) / (1000 * 60 * 60);
                         long minutes = (counttime - hours * (1000 * 60 * 60)) / (1000 * 60);
                         long second = (counttime / 1000 - hours * 60 * 60 - minutes * 60);
-                        Log.d("TAG", "run: 转换时间" + "hours==" + hours);
-                        Log.d("TAG", "run: 转换时间" + "minutes==" + minutes);
-                        Log.d("TAG", "run: 转换时间" + "second==" + second);
                         //并保存在商品time这个属性内
                         String hoursStr = hours + "";
                         String minutesStr = minutes + "";
